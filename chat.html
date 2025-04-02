@@ -18,26 +18,12 @@
             <div class="left-content">
                 <section class="intro">
                     <h2>> Chat-Room</h2>
-                    <div id="resume-content">
+                    <div>
 
                         <section class="content-section">
-                            <h2>Projects</h2>
-                            <p class = "red"><b>Server Hosting | PiNexus | Current</b></p>
-                            <p><i>Raspberry Pi 4 | Linux (DietPi) – Self-Hosted Homelab</i></p>
-                            <li>A Raspberry Pi-based local server providing a secure domain for my network, with services like ad blocking, VPN, and AI processing. This setup allowed me to explore networking, Linux system administration, and security.</li>
-                            <p><b>Key Mechanics:</b></p>
-                            <li><b>Pi-Hole for Ad Blocking</b> – Set up Pi-Hole to block ads and trackers across the network.</li>
-                            <li><b>VPN</b> – Configured WireGuard for secure, fast, and private remote access to my network.</li>
-                            <li><b>DNS & Reverse Proxy</b> – Secure domain setup for self-hosted services.</li>
-                            <li><b>AI Integration</b> – Running Ollama locally for AI-powered tasks on the Raspberry Pi.</li>
-                            <li><b>Web-Hoster</b></li>
-                            <br/>
-                            <p class = "red"><b>Back-End Software Engineer | Lain Bot | Solo | Aug 2024 — Sep 2024</b></p>
-                            <p><i>Back-End | Discord Bot</i></p>
-                            <li>Engineered a comprehensive Discord bot using Python and the Discord.py library, showcasing back-end development skills.</li>
-                            <li>Implemented features such as task management, event reminders, and interactive commands to enhance user engagement within a Discord server.</li>
-                            <li>Gained in-depth experience with API integration, asynchronous programming, and bot deployment, solidifying expertise in building scalable and efficient back-end solutions.</li>
-
+                            <div id="chat"></div> 
+                            <input type="text" id="message" placeholder="Type your message...">
+                            <button class = "send" onclick="sendMessage()">Send</button>
                         </section>
                     </div>
                 </section>
@@ -47,6 +33,7 @@
             <p>&copy; 2025 ezloom</p>
         </footer>
     </div>
+    <script src = "script.js"></script>
 </body>
 
 </html>

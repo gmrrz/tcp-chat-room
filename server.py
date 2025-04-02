@@ -1,30 +1,25 @@
 import asyncio
 import websockets
 
-connected_clients = set()
-
-async def handle_client(websocket, path):
-    # Registering client
-    connected_clients.add(websocket)
-    print(f"Client connected {websocket.remote_address}")
+async def main():
+    server = await websockets.serve(handle_client, "0.0.0.0", 8080)
+    print("WebSocket server running on ws://0.0.0.0:8080")
 
     try:
+        await asyncio.Future()  # Run forever
+    except KeyboardInterrupt:
+        print("Shutting down the server...")
+        server.close()
+        await server.wait_closed()  # Gracefully close the server
+
+async def handle_client(websocket, path):
+    print("Handling client...")
+    try:
         async for message in websocket:
-            print(f"Recieved from client: {message}")
-            # Projet the message to all clients
-            for client in connected_clients:
-                if client != websocket:
-                    await client.send(f"User: {message}")
+            print(f"Received message: {message}")
+            await websocket.send(f"Echo: {message}")
+    except websockets.exceptions.ConnectionClosed as e:
+        print(f"Connection closed: {e}")
 
-    except websockets.ConnectionClosed:
-        print(f"Client disconnected: {websocket.remote_address}")
-    finally:
-        # Unregister Client
-        connected_clients.remove(websocket)
-
-async def main():
-    async with websockets.serve(handle_client, "0.0.0.0", 8080):
-        print("WebSocket server is running on ws://0.0.0.0:8080")
-        await asyncio.Future() # Runs forever
-
+if __name__ == "__main__":
     asyncio.run(main())
