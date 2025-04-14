@@ -1,4 +1,5 @@
 import socket
+import time
 import threading
 from cryptography.fernet import Fernet
 
@@ -43,11 +44,23 @@ def start_server():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # socket.SOCK_STREAM is TCP conncetion
     server.bind((HOST, PORT))
     server.listen()
+    server.settimeout(1.0)
     print(f"[LISTENING] Server is listening on {HOST}:{PORT}")
-    while True:
-        conn, addr = server.accept()
-        thread = threading.Thread(target=handle_client, args=(conn, addr))
-        thread.start()
+    try:
+        while True:
+            try:
+                conn, addr = server.accept()
+                thread = threading.Thread(target=handle_client, args=(conn, addr))
+                thread.daemon = True  # Threads won't block shutdown
+                thread.start()
+            except socket.timeout:
+                continue  # just retry after timeout
+    except KeyboardInterrupt:
+        print("\n[!] KeyboardInterrupt detected. Shutting down server.")
+        server.close()
+        time.sleep(1)  # give threads a moment to close if needed
+        exit(0)
+
 
 start_server()
 
