@@ -1,0 +1,51 @@
+import socket
+import threading
+from cryptography.fernet import Fernet
+
+HOST = '127.0.0.1'  # Change this to your server's IP or domain later
+PORT = 12345
+
+with open("key.key", "rb") as key_file:
+    KEY = key_file.read()
+
+f = Fernet(KEY)
+
+def receive_messages(sock):
+    while True:
+        try:
+            encrypted_msg = sock.recv(1024)
+            if not encrypted_msg:
+                break
+            print(">>", f.decrypt(encrypted_msg).decode())
+        except:
+            break
+
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client.connect((HOST, PORT))
+
+threading.Thread(target=receive_messages, args=(client,), daemon=True).start()
+
+print("Connected! Type your messages below:\n")
+
+try:
+    while True:
+        msg = input()
+        if msg.strip() == "":
+            continue
+
+        # If user types '/exit', send a goodbye message and exit
+        if msg.lower() == "/exit":
+            print("Exiting the chat...")
+            client.send(f.encrypt("User has left the chat.".encode()))  # Optional: notify server
+            break
+        
+        encrypted = f.encrypt(msg.encode())
+        client.send(encrypted)
+
+except KeyboardInterrupt:
+    print("\n[!] You have left the chat.")
+    client.send(f.encrypt("User has left the chat.".encode()))  # Optional: notify server
+
+finally:
+    client.close()
+    print("[!] Connection closed.")

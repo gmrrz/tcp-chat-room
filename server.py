@@ -22,7 +22,7 @@ def broadcast(msg, sender_conn):
                 client.close()
 
 def handle_client(conn, addr):
-    print(f"[NEW CONNECTION] {addr} connected.")
+    print(f"[+] New connection from {addr}")
     clients.append(conn)
     while True:
         try:
@@ -30,12 +30,21 @@ def handle_client(conn, addr):
             if not encrypted_msg:
                 break
             decrypted_msg = f.decrypt(encrypted_msg).decode()
-            print(f"[{addr}] {decrypted_msg}")
-        
+            print(f"{addr}: {decrypted_msg}")
+
+            # If client sends a message saying they left
+            if "User has left the chat" in decrypted_msg:
+                print(f"{addr} has left the chat.")
+                break
+
+            with open("chat_log.txt", "a") as log:
+                log.write(f"{addr}: {decrypted_msg}\n")
+
             broadcast(encrypted_msg, conn)
         except:
             break
-    print(f"[DISCONNECTED] {addr} disconnected.")
+
+    print(f"[-] {addr} disconnected.")
     clients.remove(conn)
     conn.close()
 
