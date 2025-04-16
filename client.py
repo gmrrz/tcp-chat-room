@@ -23,6 +23,24 @@ def receive_messages(sock):
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect((HOST, PORT))
 
+# Prompt for username
+username = input("Enter your username: ").strip()
+while not username:
+    username = input("Username cannot be empty. Enter your username: ").strip()
+
+# Send the username to the server
+client.send(f.encrypt(username.encode()))
+
+# Display chat history
+try:
+    encrypted_history = client.recv(1024)
+    chat_history = f.decrypt(encrypted_history).decode()
+    print("\n--- Chat History ---")
+    print(chat_history)
+    print("---------------------\n")
+except:
+    print("[!] Failed to load chat history.")
+
 threading.Thread(target=receive_messages, args=(client,), daemon=True).start()
 
 print("Connected! Type your messages below:\n")
@@ -36,15 +54,16 @@ try:
         # If user types '/exit', send a goodbye message and exit
         if msg.lower() == "/exit":
             print("Exiting the chat...")
-            client.send(f.encrypt("User has left the chat.".encode()))  # Optional: notify server
+            client.send(f.encrypt(f"{username} has left the chat.".encode()))  # Notify server
             break
         
-        encrypted = f.encrypt(msg.encode())
+        # Prepend username to the message
+        encrypted = f.encrypt(f"{username}: {msg}".encode())
         client.send(encrypted)
 
 except KeyboardInterrupt:
     print("\n[!] You have left the chat.")
-    client.send(f.encrypt("User has left the chat.".encode()))  # Optional: notify server
+    client.send(f.encrypt(f"{username} has left the chat.".encode()))  # Notify server
 
 finally:
     client.close()

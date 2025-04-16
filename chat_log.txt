@@ -2,3 +2,13 @@
 ('127.0.0.1', 55270): hellooo!
 ('127.0.0.1', 55269): how are you going today?
 ('127.0.0.1', 55270): im doing well
+Islam: Islam: Hello
+Islam: Islam: hi
+Deanna: Deanna: Hi Islam
+Islam: Hello
+Ali: Hello Islam
+Islam: What are you doing today Ali?
+Islam has left the chat.
+Ali has left the chat.
+Adam: hi\
+Adam has left the chat.
