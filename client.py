@@ -2,7 +2,7 @@ import socket
 import threading
 from cryptography.fernet import Fernet
 
-HOST = '127.0.0.1'  # Change this to your server's IP or domain later
+HOST = 'ezloomdev.cc'  # Change this to your server's IP or domain later
 PORT = 12345
 
 with open("key.key", "rb") as key_file:
