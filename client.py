@@ -2,15 +2,20 @@ import socket
 import threading
 from cryptography.fernet import Fernet
 
-HOST = 'ezloomdev.cc'  # Change this to your server's IP or domain later
+HOST = 'ezloomdev.cc'  # Use the server's IP or domain here
 PORT = 12345
 
+# Reads the key file
 with open("key.key", "rb") as key_file:
     KEY = key_file.read()
+
 
 f = Fernet(KEY)
 
 def receive_messages(sock):
+    """
+    Receives and prints messages from the server.
+    """
     while True:
         try:
             encrypted_msg = sock.recv(1024)
@@ -41,6 +46,7 @@ try:
 except:
     print("[!] Failed to load chat history.")
 
+# Start a separate thread to receive messages
 threading.Thread(target=receive_messages, args=(client,), daemon=True).start()
 
 print("Connected! Type your messages below:\n")
@@ -57,7 +63,7 @@ try:
             client.send(f.encrypt(f"{username} has left the chat.".encode()))  # Notify server
             break
         
-        # Prepend username to the message
+        # Prepend username to the message and encrypt it
         encrypted = f.encrypt(f"{username}: {msg}".encode())
         client.send(encrypted)
 
