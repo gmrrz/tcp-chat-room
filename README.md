@@ -1,3 +1,9 @@
+To run this application. Run 'python3 client.py'
+
+Install cryptography library:
+'pip install cryptography'
+_________________________________________________________________________
+
 This project is for my Computer Networks class. Here I am implementing:
 
 - TCP protocol because it is way more reliable for the chat application.
